@@ -47,6 +47,12 @@ class AuthRepositoryImpl(private val db: NutriDatabase) : AuthRepository {
 
     override suspend fun logout() = withContext(kotlinx.coroutines.Dispatchers.IO) { db.userDao().clear() }
 
+    /** Обновление имени профиля (экран настройки). */
+    override suspend fun updateDisplayName(name: String) = withContext(kotlinx.coroutines.Dispatchers.IO) {
+        val current = db.userDao().getUser() ?: return@withContext
+        db.userDao().upsert(current.copy(displayName = name))
+    }
+
     private suspend fun saveUser(email: String?, phone: String?): User {
         val user = UserEntity(id = 1, email = email, phone = phone, displayName = email ?: phone ?: "", isPremium = false)
         db.userDao().upsert(user)

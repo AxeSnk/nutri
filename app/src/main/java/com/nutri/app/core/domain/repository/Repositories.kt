@@ -30,5 +30,6 @@ interface AuthRepository {
     val user: Flow<User?>
     suspend fun loginWithEmail(email: String): Result<User>
     suspend fun loginWithPhone(phone: String): Result<User>
+    suspend fun updateDisplayName(name: String)
     suspend fun logout()
 }

@@ -3,6 +3,7 @@ package com.nutri.app.feature.builder
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -28,6 +29,7 @@ import com.nutri.app.core.domain.model.Dish
 import com.nutri.app.core.domain.model.Ingredient
 import com.nutri.app.core.domain.model.MealType
 import com.nutri.app.core.domain.model.Recommendation
+import com.nutri.app.ui.theme.NutriColors
 
 /**
  * Конструктор питания — два режима в одном экране:
@@ -172,16 +174,22 @@ private fun AnimatedDishCard(dish: Dish, index: Int, extra: String = "", onLog: 
         animationSpec = tween(durationMillis = 250, delayMillis = index * 40),
         label = "cardAppear"
     )
-    Card(Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = NutriColors.RecipeCard),
+        border = androidx.compose.foundation.BorderStroke(1.dp, NutriColors.Card)
+    ) {
         Column(Modifier.padding(16.dp)) {
-            Text(dish.name, style = MaterialTheme.typography.titleMedium)
+            Text(dish.name, style = MaterialTheme.typography.titleMedium,
+                color = NutriColors.Card)
             if (extra.isNotBlank()) Text(extra, style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary)
+                color = NutriColors.Meat)
             Spacer(Modifier.height(4.dp))
             Text("${dish.kcal} ккал · Б ${dish.protein} / Ж ${dish.fat} / У ${dish.carbs}",
-                style = MaterialTheme.typography.bodySmall)
+                style = MaterialTheme.typography.bodySmall, color = NutriColors.TextSecondary)
             Spacer(Modifier.height(8.dp))
-            AssistChip(onClick = onLog, label = { Text("Записать в дневник") })
+            AssistChip(onClick = onLog, label = { Text("Записать в дневник") },
+                colors = AssistChipDefaults.assistChipColors(containerColor = NutriColors.Card))
         }
     }
 }
@@ -219,7 +227,13 @@ private fun CustomTab(
             value = query,
             onValueChange = { query = it; onSearch(it) },
             label = { Text("Найти ингредиент (гречка, курица…)") },
-            modifier = Modifier.fillMaxWidth()
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = NutriColors.Red,
+                unfocusedBorderColor = NutriColors.Field,
+                cursorColor = NutriColors.Red
+            )
         )
         // Результаты поиска
         ingredientResults.take(5).forEach { ing ->

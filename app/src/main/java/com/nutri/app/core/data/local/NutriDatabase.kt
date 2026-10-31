@@ -123,6 +123,9 @@ interface UserDao {
     @Query("SELECT * FROM users LIMIT 1")
     fun observeUser(): kotlinx.coroutines.flow.Flow<UserEntity?>
 
+    @Query("SELECT * FROM users LIMIT 1")
+    suspend fun getUser(): UserEntity?
+
     @Upsert
     suspend fun upsert(user: UserEntity)
 

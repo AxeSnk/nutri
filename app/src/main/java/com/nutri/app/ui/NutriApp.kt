@@ -11,7 +11,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.nutri.app.ui.theme.NutriColors
+import kotlinx.coroutines.flow.map
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -46,9 +51,15 @@ fun NutriApp(loggedIn: Boolean, graph: AppGraph, viewModelFactory: ViewModelProv
     val showTabs = tabs.any { it.route == currentRoute }
     val wide = androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp >= 840
 
-    LaunchedEffect(loggedIn, currentRoute) {
+    // null = цель ещё читается из БД; true/false = цель установлена / не установлена.
+    val hasGoal by remember { graph.goalRepository.goal.map { it != null } }
+        .collectAsStateWithLifecycle(initialValue = null)
+
+    LaunchedEffect(loggedIn, currentRoute, hasGoal) {
         if (loggedIn && currentRoute == "auth") {
-            navController.navigate("goals") {
+            val goalSet = hasGoal ?: return@LaunchedEffect // ждём ответ из БД
+            // Экран цели — только если цель ещё не задана
+            navController.navigate(if (goalSet) "home" else "goals") {
                 popUpTo("auth") { inclusive = true }
             }
         } else if (!loggedIn && currentRoute != null && currentRoute != "auth") {
@@ -78,7 +89,11 @@ fun NutriApp(loggedIn: Boolean, graph: AppGraph, viewModelFactory: ViewModelProv
             }
             composable("home") {
                 val vm: com.nutri.app.feature.home.HomeViewModel = viewModel(factory = viewModelFactory)
-                HomeScreen(vm)
+                HomeScreen(vm, onAvatarClick = { navController.navigate("profile") })
+            }
+            composable("profile") {
+                val vm: com.nutri.app.feature.profile.ProfileViewModel = viewModel(factory = viewModelFactory)
+                com.nutri.app.feature.profile.ProfileScreen(vm, onBack = { navController.popBackStack() })
             }
             composable("builder") {
                 val vm: com.nutri.app.feature.builder.BuilderViewModel = viewModel(factory = viewModelFactory)
@@ -96,13 +111,20 @@ fun NutriApp(loggedIn: Boolean, graph: AppGraph, viewModelFactory: ViewModelProv
     } else if (wide) {
         // Планшет: боковой rail + контент (как левая колонка меню на макете)
         Row {
-            NavigationRail {
+            NavigationRail(containerColor = NutriColors.Card) {
                 tabs.forEach { tab ->
                     NavigationRailItem(
                         selected = currentRoute == tab.route,
                         onClick = { navController.navigate(tab.route) { launchSingleTop = true } },
                         icon = { Icon(tab.icon, null) },
-                        label = { Text(tab.label) }
+                        label = { Text(tab.label) },
+                        colors = NavigationRailItemDefaults.colors(
+                            selectedIconColor = NutriColors.Red,
+                            selectedTextColor = NutriColors.Red,
+                            unselectedIconColor = NutriColors.Icon,
+                            unselectedTextColor = NutriColors.Inactive,
+                            indicatorColor = Color.Transparent
+                        )
                     )
                 }
             }
@@ -111,13 +133,20 @@ fun NutriApp(loggedIn: Boolean, graph: AppGraph, viewModelFactory: ViewModelProv
     } else {
         Scaffold(
             bottomBar = {
-                NavigationBar {
+                NavigationBar(containerColor = NutriColors.Card) {
                     tabs.forEach { tab ->
                         NavigationBarItem(
                             selected = currentRoute == tab.route,
                             onClick = { navController.navigate(tab.route) { launchSingleTop = true } },
                             icon = { Icon(tab.icon, null) },
-                            label = { Text(tab.label) }
+                            label = { Text(tab.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = NutriColors.Red,
+                                selectedTextColor = NutriColors.Red,
+                                unselectedIconColor = NutriColors.Icon,
+                                unselectedTextColor = NutriColors.Inactive,
+                                indicatorColor = Color.Transparent
+                            )
                         )
                     }
                 }

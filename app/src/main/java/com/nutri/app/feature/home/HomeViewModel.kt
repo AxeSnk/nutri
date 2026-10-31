@@ -3,6 +3,7 @@ package com.nutri.app.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutri.app.core.domain.model.*
+import com.nutri.app.core.domain.repository.AuthRepository
 import com.nutri.app.core.domain.repository.DiaryRepository
 import com.nutri.app.core.domain.repository.DishRepository
 import com.nutri.app.core.domain.repository.GoalRepository
@@ -25,8 +26,15 @@ data class HomeUiState(
     /** План недели: день -> суммарные ккал блюд, распределённых по приёмам. */
     val weekPlan: List<PlanDay> = emptyList(),
     val eatenKcal: Float = 0f,
-    val eatenMacros: Macros = Macros(0f, 0f, 0f)
-)
+    val eatenMacros: Macros = Macros(0f, 0f, 0f),
+    val userName: String = ""
+) {
+    /** Имя для приветствия: email/телефон (имя по умолчанию) не показываем. */
+    val greetingName: String
+        get() = userName.trim().takeIf { it.isNotBlank() && '@' !in it && !it.startsWith("+") }
+            ?: "Пользователь"
+    val initial: String get() = greetingName.take(1).uppercase()
+}
 
 /** Один день плана: суммы БЖУ по приёмам пищи (для цветных сегментов карточки дня). */
 data class PlanDay(
@@ -42,6 +50,7 @@ class HomeViewModel(
     private val dishRepository: DishRepository,
     private val goalRepository: GoalRepository,
     private val diaryRepository: DiaryRepository,
+    private val authRepository: AuthRepository,
     private val getRecommendations: GetRecommendationsUseCase
 ) : ViewModel() {
 
@@ -53,6 +62,11 @@ class HomeViewModel(
     }
 
     private fun load() {
+        viewModelScope.launch {
+            authRepository.user.collect { user ->
+                _uiState.update { it.copy(userName = user?.displayName ?: "") }
+            }
+        }
         viewModelScope.launch {
             // Цель + потребление текущего дня
             combine(goalRepository.goal, diaryRepository.observeDay(1, LocalDate.now().toString())) { goal, entries ->

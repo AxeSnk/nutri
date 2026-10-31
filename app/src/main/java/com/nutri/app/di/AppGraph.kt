@@ -68,7 +68,9 @@ class NutriViewModelFactory(private val graph: AppGraph) : ViewModelProvider.Fac
         com.nutri.app.feature.diary.DiaryViewModel::class.java ->
             com.nutri.app.feature.diary.DiaryViewModel(graph.observeDailyProgress) as T
         com.nutri.app.feature.home.HomeViewModel::class.java ->
-            com.nutri.app.feature.home.HomeViewModel(graph.dishRepository, graph.goalRepository, graph.diaryRepository, graph.getRecommendations) as T
+            com.nutri.app.feature.home.HomeViewModel(graph.dishRepository, graph.goalRepository, graph.diaryRepository, graph.authRepository, graph.getRecommendations) as T
+        com.nutri.app.feature.profile.ProfileViewModel::class.java ->
+            com.nutri.app.feature.profile.ProfileViewModel(graph.authRepository, graph.goalRepository) as T
         else -> throw IllegalArgumentException("Unknown ViewModel: $modelClass")
     }
 }

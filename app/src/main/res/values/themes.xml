@@ -2,9 +2,9 @@
 <resources>
     <!-- Тёмная тема по умолчанию: окно рисуется в цветах макета до старта Compose (нет белой вспышки) -->
     <style name="Theme.Nutri" parent="android:Theme.Material.NoActionBar">
-        <item name="android:windowBackground">#121417</item>
-        <item name="android:statusBarColor">#121417</item>
-        <item name="android:navigationBarColor">#121417</item>
+        <item name="android:windowBackground">#121212</item>
+        <item name="android:statusBarColor">#121212</item>
+        <item name="android:navigationBarColor">#121212</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>
