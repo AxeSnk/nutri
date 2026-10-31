@@ -41,10 +41,10 @@ private val DarkColors = darkColorScheme(
     outline = Color(0xFF54524F)
 )
 
-/** Material 3 тема. По умолчанию — тёмная, как на макете; системная светлая поддерживается. */
+/** Material 3 тема. По умолчанию — тёмная, как на макете design.jpg. */
 @Composable
 fun NutriTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

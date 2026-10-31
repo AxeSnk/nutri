@@ -43,10 +43,11 @@ fun HomeScreen(viewModel: HomeViewModel) {
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         item { Header(state) }
-        item { SectionTitle("Chef recommendation", "with lemon butter sauce") }
+        item { SectionTitle("Рекомендации шефа", "подобрано по вашей цели") }
         item { RecommendationRow(state.recommendations) }
-        item { SectionTitle("Meal Plan", "balanced plan for the week") }
+        item { SectionTitle("План питания", "сбалансированный план на неделю") }
         item { WeekPlanRow(state.weekPlan) }
+        item { SectionTitle("Дневная цель", "калории и БЖУ за сегодня") }
         item { DailyDietGoalCard(state.eatenKcal, state.eatenMacros, state.goal) }
     }
 }
@@ -64,9 +65,9 @@ private fun Header(state: HomeUiState) {
         ) { Text("M", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold) }
         Spacer(Modifier.width(12.dp))
         Column {
-            Text("Welcome back,", style = MaterialTheme.typography.bodySmall,
+            Text("С возвращением,", style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("Maria", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Text("Мария", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         }
         Spacer(Modifier.weight(1f))
         // Индикатор потребления сегодня: съедено / цель
@@ -77,7 +78,7 @@ private fun Header(state: HomeUiState) {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
-            Text("сегодня", style = MaterialTheme.typography.labelSmall,
+            Text("всё ещё", style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
@@ -89,7 +90,7 @@ private fun SectionTitle(title: String, subtitle: String) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
             Spacer(Modifier.weight(1f))
-            Text("see all", style = MaterialTheme.typography.labelMedium,
+            Text("посмотреть все", style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.primary)
         }
         Text(subtitle, style = MaterialTheme.typography.bodySmall,
@@ -136,7 +137,7 @@ private fun RecommendationRow(recs: List<Recommendation>) {
                         onClick = { /* добавление в дневник — см. конструктор */ },
                         modifier = Modifier.fillMaxWidth().height(34.dp),
                         contentPadding = PaddingValues(horizontal = 8.dp)
-                    ) { Text("Add to diary", style = MaterialTheme.typography.labelSmall) }
+                    ) { Text("В дневник", style = MaterialTheme.typography.labelSmall) }
                 }
             }
         }

@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:allowBackup="true"
         android:networkSecurityConfig="@xml/network_security"
+        android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.Nutri">
         <activity
             android:name=".MainActivity"

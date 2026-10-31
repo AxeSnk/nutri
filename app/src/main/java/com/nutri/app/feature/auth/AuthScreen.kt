@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 /** Экран входа: email или телефон, локальный профиль. */
@@ -28,6 +29,14 @@ fun AuthScreen(viewModel: AuthViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        // Логотип-карточка как на макете: коралловый скруглённый блок
+        androidx.compose.foundation.shape.RoundedCornerShape(28.dp).let {
+            Surface(color = MaterialTheme.colorScheme.primary, shape = it) {
+                Text("🥗", modifier = Modifier.padding(horizontal = 28.dp, vertical = 20.dp),
+                    fontSize = 34.sp)
+            }
+        }
+        Spacer(Modifier.height(20.dp))
         Text("Nutri", style = MaterialTheme.typography.displaySmall, color = MaterialTheme.colorScheme.primary)
         Text("Калории и БЖУ без сложностей", style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
         Spacer(Modifier.height(32.dp))

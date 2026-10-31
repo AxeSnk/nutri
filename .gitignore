@@ -1,0 +1,33 @@
+# Gradle
+.gradle/
+build/
+app/build/
+captures/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Android Studio service files
+local.properties
+
+# Logs & temp
+*.log
+build_out.log
+build_err.log
+ksp_meta.xml
+
+# Keystore (никогда не в репозитории!)
+*.jks
+*.keystore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Package / caches
+*.apk.idsig
+.cxx/
